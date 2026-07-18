@@ -600,17 +600,9 @@
     const latest = records[records.length - 1];
     const translation = latest?.wordTranslation || '';
 
-    let hint = '';
-    if (records.length > 1) {
-      hint = `<div class="wt-tooltip-hint">${records.length} records &middot; click for all</div>`;
-    } else {
-      hint = `<div class="wt-tooltip-hint">Click for detail</div>`;
-    }
-
     tooltip.innerHTML = `
       <div class="wt-tooltip-word">${escapeHtml(data.word)}</div>
       <div class="wt-tooltip-trans">${escapeHtml(translation)}</div>
-      ${hint}
     `;
 
     document.body.appendChild(tooltip);
