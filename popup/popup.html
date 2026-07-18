@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-title">Word Translator</div>
+      <div class="header-sub">AI-powered contextual translation</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="words">Words <span class="count" id="tab-count"></span></button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <div class="tab-content active" id="tab-words">
+      <div class="toolbar">
+        <input type="text" class="search-input" id="search-input" placeholder="Filter words...">
+        <button class="btn btn-outline btn-sm" id="btn-export">Export</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="word-list" id="word-list">
+        <div class="empty-state">No words saved.<br>Double-click any word on a webpage to translate it.</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-settings">
+      <div class="settings-content">
+        <div class="form-group">
+          <label for="provider">Provider</label>
+          <select id="provider">
+            <option value="deepseek">DeepSeek</option>
+            <option value="openai">OpenAI</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="api-url">API URL</label>
+          <input type="text" id="api-url" placeholder="https://api.deepseek.com/v1/chat/completions">
+        </div>
+        <div class="form-group">
+          <label for="api-key">API Key</label>
+          <input type="password" id="api-key" placeholder="sk-...">
+        </div>
+        <div class="form-group">
+          <label for="model">Model name</label>
+          <input type="text" id="model" placeholder="deepseek-v4-flash">
+        </div>
+        <button class="btn btn-primary btn-full" id="btn-save-settings">Save Settings</button>
+        <div class="msg" id="settings-msg"></div>
+
+        <div class="provider-presets">
+          <div class="preset-title">Quick Select</div>
+          <button class="btn btn-outline btn-sm preset-btn" data-provider="deepseek">DeepSeek</button>
+          <button class="btn btn-outline btn-sm preset-btn" data-provider="openai">OpenAI</button>
+          <button class="btn btn-outline btn-sm preset-btn" data-provider="openrouter">OpenRouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
