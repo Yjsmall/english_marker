@@ -262,6 +262,84 @@
     }
   }
 
+  function showHistoryCard(mouseX, mouseY, word, records) {
+    removeCard();
+    removeTooltip();
+    clearHighlight();
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'wt-backdrop';
+    document.body.appendChild(backdrop);
+
+    const card = document.createElement('div');
+    card.className = 'wt-card';
+
+    const recordsHtml = records.map((r, i) => `
+      <div class="wt-card-prev-record">
+        <div class="rec-label">#${i + 1} &mdash; ${escapeHtml(r.wordTranslation)}</div>
+        <div class="rec-sentence">"${escapeHtml(r.sentence)}"</div>
+        <div class="rec-sentence" style="margin-top:2px;opacity:0.7;">${escapeHtml(r.sentenceTranslation)}</div>
+        <div style="font-size:10px;color:#bbb;margin-top:2px;">${new Date(r.timestamp).toLocaleString()}</div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="wt-card-header">
+        <div>
+          <div class="wt-card-word">${escapeHtml(word)}</div>
+          <div class="wt-card-record-info">${records.length} record${records.length > 1 ? 's' : ''}</div>
+        </div>
+        <button class="wt-card-close">&times;</button>
+      </div>
+      <div class="wt-card-body">
+        <div class="wt-card-field">
+          <div class="wt-card-label">All previous contexts</div>
+          ${recordsHtml}
+        </div>
+      </div>
+      <div class="wt-card-footer">
+        <button class="wt-card-btn wt-card-btn-secondary" id="wt-btn-new">Add new context</button>
+      </div>
+    `;
+
+    document.body.appendChild(card);
+
+    const cardW = 380;
+    let left = mouseX + 16;
+    let top = mouseY - 20;
+
+    if (left + cardW > window.innerWidth - 12) {
+      left = mouseX - cardW - 16;
+    }
+    if (left < 12) left = 12;
+
+    const cardH = Math.min(card.offsetHeight || 300, window.innerHeight - 32);
+    if (top + cardH + 12 > window.innerHeight) {
+      top = mouseY - cardH - 12;
+    }
+    if (top < 12) top = 12;
+
+    card.style.left = left + 'px';
+    card.style.top = top + 'px';
+    card.style.maxHeight = (window.innerHeight - 24) + 'px';
+
+    currentCard = card;
+    currentBackdrop = backdrop;
+
+    card.querySelector('.wt-card-close').addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      removeCard();
+    });
+
+    card.querySelector('#wt-btn-new').addEventListener('click', () => {
+      const sentence = getContextSentence(
+        document.querySelector(`.wt-known-word[data-wt*="${escapeAttr(word)}"]`) || document.body
+      );
+      removeCard();
+      showCard(mouseX, mouseY, word, sentence, true);
+    });
+  }
+
   async function doTranslate(word, sentence, card) {
     try {
       const result = await sendMessage({
@@ -439,7 +517,32 @@
         removeTooltip();
       });
 
+      let clickTimer = null;
+
+      el.addEventListener('click', (e) => {
+        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; return; }
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          const dataStr = el.getAttribute('data-wt');
+          if (!dataStr) return;
+          try {
+            const data = JSON.parse(dataStr.replace(/&quot;/g, '"'));
+            const records = knownWords[data.word] || [];
+            if (records.length === 0) return;
+            removeCard();
+            removeTooltip();
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const rect = range.getBoundingClientRect();
+            showHistoryCard(rect.left + rect.width / 2, rect.bottom, data.word, records);
+          } catch (err) {
+            console.warn('WordTranslator: failed to parse data', err);
+          }
+        }, 280);
+      });
+
       el.addEventListener('dblclick', (e) => {
+        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
         e.stopPropagation();
         const dataStr = el.getAttribute('data-wt');
         if (!dataStr) return;
@@ -551,6 +654,10 @@
 
   function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function escapeAttr(str) {
+    return str.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   chrome.runtime.onMessage.addListener((request) => {
