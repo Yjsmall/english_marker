@@ -283,8 +283,6 @@
       <div class="wt-card-prev-record">
         <div class="rec-label">#${i + 1} &mdash; ${escapeHtml(r.wordTranslation)}</div>
         <div class="rec-sentence">"${escapeHtml(r.sentence)}"</div>
-        <div class="rec-sentence" style="margin-top:2px;opacity:0.7;">${escapeHtml(r.sentenceTranslation)}</div>
-        <div style="font-size:10px;color:#bbb;margin-top:2px;">${new Date(r.timestamp).toLocaleString()}</div>
       </div>
     `).join('');
 
