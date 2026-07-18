@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Word Translator",
+  "name": "Word Translator - AI Contextual Dictionary",
+  "short_name": "Word Translator",
   "version": "1.0.0",
-  "description": "Double-click any word to translate it with AI. Saves your word history and highlights known words across the web.",
+  "description": "Double-click any word to get AI-powered translation in context. Build your personal vocabulary across the web.",
+  "homepage_url": "https://github.com/your-repo/word-translator",
   "permissions": [
     "storage",
     "activeTab"
