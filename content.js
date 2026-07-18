@@ -3,6 +3,7 @@
 
   let currentCard = null;
   let currentTooltip = null;
+  let currentBackdrop = null;
   let currentHighlight = null;
   let knownWords = {};
   let isScanning = false;
@@ -147,6 +148,14 @@
   }
 
   function showCard(mouseX, mouseY, word, sentence, translate) {
+    removeCard();
+    removeTooltip();
+    clearHighlight();
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'wt-backdrop';
+    document.body.appendChild(backdrop);
+
     const card = document.createElement('div');
     card.className = 'wt-card';
 
@@ -204,22 +213,27 @@
 
     document.body.appendChild(card);
 
-    let left = mouseX - 180;
-    let top = mouseY + 16;
+    const cardW = 380;
+    let left = mouseX + 16;
+    let top = mouseY - 20;
 
-    if (left + 380 > window.innerWidth) {
-      left = mouseX - 380;
+    if (left + cardW > window.innerWidth - 12) {
+      left = mouseX - cardW - 16;
     }
-    if (left < 8) left = 8;
-    if (top + card.offsetHeight > window.innerHeight + window.scrollY) {
-      top = mouseY - card.offsetHeight - 12;
+    if (left < 12) left = 12;
+
+    const cardH = Math.min(card.offsetHeight || 300, window.innerHeight - 32);
+    if (top + cardH + 12 > window.innerHeight) {
+      top = mouseY - cardH - 12;
     }
-    if (top < 8) top = 8;
+    if (top < 12) top = 12;
 
     card.style.left = left + 'px';
     card.style.top = top + 'px';
+    card.style.maxHeight = (window.innerHeight - 24) + 'px';
 
     currentCard = card;
+    currentBackdrop = backdrop;
 
     card.querySelector('.wt-card-close').addEventListener('click', (ev) => {
       ev.stopPropagation();
@@ -305,6 +319,10 @@
       currentCard.remove();
       currentCard = null;
     }
+    if (currentBackdrop) {
+      currentBackdrop.remove();
+      currentBackdrop = null;
+    }
     clearHighlight();
   }
 
@@ -316,7 +334,7 @@
   }
 
   function handleClick(e) {
-    if (currentCard && !currentCard.contains(e.target)) {
+    if (e.target.classList.contains('wt-backdrop')) {
       removeCard();
     }
     removeTooltip();
