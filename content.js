@@ -279,10 +279,10 @@
     const card = document.createElement('div');
     card.className = 'wt-card';
 
-    const recordsHtml = records.map((r, i) => `
+    const recordsHtml = records.map((r) => `
       <div class="wt-card-prev-record">
-        <div class="rec-label">#${i + 1} &mdash; ${escapeHtml(r.wordTranslation)}</div>
         <div class="rec-sentence">"${escapeHtml(r.sentence)}"</div>
+        <div class="rec-label">${escapeHtml(r.wordTranslation)}</div>
       </div>
     `).join('');
 
@@ -295,10 +295,7 @@
         <button class="wt-card-close">&times;</button>
       </div>
       <div class="wt-card-body">
-        <div class="wt-card-field">
-          <div class="wt-card-label">All previous contexts</div>
-          ${recordsHtml}
-        </div>
+        ${recordsHtml}
       </div>
       <div class="wt-card-footer">
         <button class="wt-card-btn wt-card-btn-secondary" id="wt-btn-new">Add new context</button>
