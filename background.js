@@ -93,18 +93,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   } else if (request.type === 'EXPORT_RECORDS') {
     chrome.storage.local.get('wordRecords', (data) => {
-      const records = data.wordRecords || {};
-      const json = JSON.stringify(records, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      chrome.downloads.download({
-        url,
-        filename: `word-records-${new Date().toISOString().slice(0, 10)}.json`,
-        saveAs: true
-      }).catch(() => {
-        sendResponse({ json });
-      });
-      sendResponse({ success: true });
+      sendResponse({ json: JSON.stringify(data.wordRecords || {}, null, 2) });
     });
     return true;
   } else if (request.type === 'GET_SETTINGS') {

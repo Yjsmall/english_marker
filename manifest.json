@@ -5,11 +5,7 @@
   "description": "Double-click any word to translate it with AI. Saves your word history and highlights known words across the web.",
   "permissions": [
     "storage",
-    "activeTab",
-    "downloads"
-  ],
-  "host_permissions": [
-    "https://api.deepseek.com/*"
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"
