@@ -241,33 +241,21 @@
 .wt-tooltip-word {
   font-weight: 700;
   font-size: 14px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   color: #f59e0b;
 }
 
-.wt-tooltip-records {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.wt-tooltip-record {
-  font-size: 12px;
-  opacity: .9;
-}
-
-.wt-tooltip-record-sentence {
-  color: #aaa;
-  font-style: italic;
-  margin-bottom: 2px;
-  font-size: 11px;
+.wt-tooltip-trans {
+  font-size: 14px;
+  color: #eee;
+  line-height: 1.4;
 }
 
 .wt-tooltip-hint {
   font-size: 10px;
   color: #777;
   margin-top: 8px;
-  text-align: center;
   border-top: 1px solid #333;
   padding-top: 8px;
+  text-align: center;
 }

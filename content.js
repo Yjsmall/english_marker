@@ -593,30 +593,19 @@
 
     const records = data.records || [];
     const latest = records[records.length - 1];
+    const translation = latest?.wordTranslation || '';
 
-    let recordsHtml = '';
-    if (records.length <= 3) {
-      recordsHtml = records.map((r, i) => `
-        <div class="wt-tooltip-record">
-          <div class="wt-tooltip-record-sentence">"${escapeHtml(r.sentence.substring(0, 60))}${r.sentence.length>60?'...':''}"</div>
-          <div>${escapeHtml(r.wordTranslation)}</div>
-        </div>
-      `).join('');
-    } else {
-      recordsHtml = `<div>Latest: ${escapeHtml(latest?.wordTranslation || '')}</div>`;
-    }
-
-    let hintHtml = '';
+    let hint = '';
     if (records.length > 1) {
-      hintHtml = `<div class="wt-tooltip-hint">${records.length} records total &mdash; double-click to add another</div>`;
+      hint = `<div class="wt-tooltip-hint">${records.length} records &middot; click for all</div>`;
     } else {
-      hintHtml = `<div class="wt-tooltip-hint">Double-click to see more &amp; add context</div>`;
+      hint = `<div class="wt-tooltip-hint">Click for detail</div>`;
     }
 
     tooltip.innerHTML = `
       <div class="wt-tooltip-word">${escapeHtml(data.word)}</div>
-      <div class="wt-tooltip-records">${recordsHtml}</div>
-      ${hintHtml}
+      <div class="wt-tooltip-trans">${escapeHtml(translation)}</div>
+      ${hint}
     `;
 
     document.body.appendChild(tooltip);
