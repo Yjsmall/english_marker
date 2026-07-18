@@ -4,7 +4,7 @@
   "short_name": "Word Translator",
   "version": "1.0.0",
   "description": "Double-click any word to get AI-powered translation in context. Build your personal vocabulary across the web.",
-  "homepage_url": "https://github.com/your-repo/word-translator",
+  "homepage_url": "https://github.com/Yjsmall/english_marker",
   "permissions": [
     "storage",
     "activeTab"
