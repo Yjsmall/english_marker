@@ -144,10 +144,15 @@
     removeTooltip();
     clearHighlight();
 
-    showCard(e.clientX, e.clientY, word, sentence, true);
+    const range = document.createRange();
+    range.setStart(info.textNode, info.startIndex);
+    range.setEnd(info.textNode, info.endIndex);
+    const rect = range.getBoundingClientRect();
+
+    showCard(rect, word, sentence, true);
   }
 
-  function showCard(mouseX, mouseY, word, sentence, translate) {
+  function showCard(wordRect, word, sentence, translate) {
     removeCard();
     removeTooltip();
     clearHighlight();
@@ -214,17 +219,17 @@
     document.body.appendChild(card);
 
     const cardW = 380;
-    let left = mouseX + 16;
-    let top = mouseY - 20;
+    let left = wordRect.left + wordRect.width / 2 - cardW / 2;
+    let top = wordRect.bottom + 8;
 
     if (left + cardW > window.innerWidth - 12) {
-      left = mouseX - cardW - 16;
+      left = window.innerWidth - cardW - 12;
     }
     if (left < 12) left = 12;
 
     const cardH = Math.min(card.offsetHeight || 300, window.innerHeight - 32);
     if (top + cardH + 12 > window.innerHeight) {
-      top = mouseY - cardH - 12;
+      top = wordRect.top - cardH - 8;
     }
     if (top < 12) top = 12;
 
@@ -262,7 +267,7 @@
     }
   }
 
-  function showHistoryCard(mouseX, mouseY, word, records) {
+  function showHistoryCard(wordRect, word, records) {
     removeCard();
     removeTooltip();
     clearHighlight();
@@ -305,17 +310,17 @@
     document.body.appendChild(card);
 
     const cardW = 380;
-    let left = mouseX + 16;
-    let top = mouseY - 20;
+    let left = wordRect.left + wordRect.width / 2 - cardW / 2;
+    let top = wordRect.bottom + 8;
 
     if (left + cardW > window.innerWidth - 12) {
-      left = mouseX - cardW - 16;
+      left = window.innerWidth - cardW - 12;
     }
     if (left < 12) left = 12;
 
     const cardH = Math.min(card.offsetHeight || 300, window.innerHeight - 32);
     if (top + cardH + 12 > window.innerHeight) {
-      top = mouseY - cardH - 12;
+      top = wordRect.top - cardH - 8;
     }
     if (top < 12) top = 12;
 
@@ -336,7 +341,7 @@
         document.querySelector(`.wt-known-word[data-wt*="${escapeAttr(word)}"]`) || document.body
       );
       removeCard();
-      showCard(mouseX, mouseY, word, sentence, true);
+      showCard(wordRect, word, sentence, true);
     });
   }
 
@@ -534,7 +539,7 @@
             const range = document.createRange();
             range.selectNodeContents(el);
             const rect = range.getBoundingClientRect();
-            showHistoryCard(rect.left + rect.width / 2, rect.bottom, data.word, records);
+            showHistoryCard(rect, data.word, records);
           } catch (err) {
             console.warn('WordTranslator: failed to parse data', err);
           }
@@ -555,7 +560,7 @@
           const sentence = getContextSentence(el);
           removeCard();
           removeTooltip();
-          showCard(rect.left + rect.width / 2, rect.bottom, word, sentence, true);
+          showCard(rect, word, sentence, true);
         } catch (err) {
           console.warn('WordTranslator: failed to parse data', err);
         }
